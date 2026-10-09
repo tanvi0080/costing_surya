@@ -1,0 +1,79 @@
+{
+ "doctype": "DocType",
+ "name": "Costing Usage Process",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-09 10:00:00.000000",
+ "modified": "2026-10-09 10:00:00.000000",
+ "field_order": [
+  "process",
+  "item",
+  "usage_per_output",
+  "unit_price",
+  "total_per_output",
+  "extra_cost",
+  "total_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "process",
+   "label": "Process",
+   "fieldtype": "Link",
+   "options": "Process",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "item",
+   "label": "Product",
+   "fieldtype": "Link",
+   "options": "Costing Item",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "usage_per_output",
+   "label": "Usage / output",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "columns": 1,
+   "precision": "6"
+  },
+  {
+   "fieldname": "unit_price",
+   "label": "Unit price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "total_per_output",
+   "label": "Total / output",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "precision": "4"
+  },
+  {
+   "fieldname": "extra_cost",
+   "label": "Extra",
+   "fieldtype": "Currency"
+  },
+  {
+   "fieldname": "total_rate",
+   "label": "Total rate / output",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "in_list_view": 1,
+   "precision": "2",
+   "columns": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [],
+ "istable": 1,
+ "editable_grid": 1
+}

@@ -1,0 +1,55 @@
+{
+ "doctype": "DocType",
+ "name": "Costing Charge",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-09 10:00:00.000000",
+ "modified": "2026-10-09 10:00:00.000000",
+ "field_order": [
+  "charge",
+  "amount",
+  "qty",
+  "cost_per_piece"
+ ],
+ "fields": [
+  {
+   "fieldname": "charge",
+   "label": "Charge",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 3
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount (per period)",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "qty",
+   "label": "Qty (pieces)",
+   "fieldtype": "Float",
+   "default": "1",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "cost_per_piece",
+   "label": "Cost per piece",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "in_list_view": 1,
+   "precision": "2",
+   "columns": 2
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [],
+ "istable": 1,
+ "editable_grid": 1
+}

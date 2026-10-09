@@ -1,0 +1,106 @@
+{
+ "doctype": "DocType",
+ "name": "Purchase Entry",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-09 10:00:00.000000",
+ "modified": "2026-10-09 10:00:00.000000",
+ "field_order": [
+  "posting_date",
+  "supplier",
+  "item",
+  "item_name",
+  "qty",
+  "uom",
+  "uom_name",
+  "rate",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "label": "Date",
+   "fieldtype": "Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Supplier",
+   "fieldtype": "Data",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item",
+   "label": "Product name",
+   "fieldtype": "Link",
+   "options": "Costing Item",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_name",
+   "label": "Item name",
+   "fieldtype": "Data",
+   "fetch_from": "item.item_name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "label": "Unit",
+   "fieldtype": "Float",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "uom",
+   "label": "UoM",
+   "fieldtype": "Link",
+   "options": "Costing UOM",
+   "fetch_from": "item.uom",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom_name",
+   "label": "UoM name",
+   "fieldtype": "Data",
+   "fetch_from": "item.uom_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "rate",
+   "label": "Rate",
+   "fieldtype": "Currency",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Total",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "share": 1,
+   "email": 1
+  }
+ ],
+ "autoname": "PE-.#####"
+}

@@ -1,0 +1,67 @@
+{
+ "doctype": "DocType",
+ "name": "Costing Item",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-09 10:00:00.000000",
+ "modified": "2026-10-09 10:00:00.000000",
+ "field_order": [
+  "item_code",
+  "item_name",
+  "uom",
+  "uom_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "label": "ID",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_name",
+   "label": "Name",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "uom",
+   "label": "UoM",
+   "fieldtype": "Link",
+   "options": "Costing UOM",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "uom_name",
+   "label": "UoM name",
+   "fieldtype": "Data",
+   "fetch_from": "uom.uom_name",
+   "read_only": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "share": 1,
+   "email": 1
+  }
+ ],
+ "autoname": "field:item_code",
+ "search_fields": "item_name",
+ "title_field": "item_name"
+}

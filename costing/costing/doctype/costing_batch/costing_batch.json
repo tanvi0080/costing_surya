@@ -1,0 +1,209 @@
+{
+ "doctype": "DocType",
+ "name": "Costing Batch",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-09 10:00:00.000000",
+ "modified": "2026-10-09 10:00:00.000000",
+ "field_order": [
+  "product",
+  "product_name",
+  "batch_date",
+  "cb1",
+  "rejection_method",
+  "rate_basis",
+  "sb_mat",
+  "batch_processes",
+  "sb_use",
+  "usage_processes",
+  "material_rejection_pct",
+  "sb_lab",
+  "labour_charges",
+  "labour_rejection_pct",
+  "sb_mac",
+  "machine_charges",
+  "machine_rejection_pct",
+  "sb_res",
+  "materials_total",
+  "after_material_rejection",
+  "labour_total",
+  "after_labour_rejection",
+  "cb2",
+  "machine_total",
+  "total_cost_per_piece"
+ ],
+ "fields": [
+  {
+   "fieldname": "product",
+   "label": "Product name",
+   "fieldtype": "Link",
+   "options": "Costing Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "product_name",
+   "label": "Product title",
+   "fieldtype": "Data",
+   "fetch_from": "product.item_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "batch_date",
+   "label": "Batch date",
+   "fieldtype": "Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "cb1",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rejection_method",
+   "label": "Rejection method",
+   "fieldtype": "Select",
+   "options": "Add % on top\nDivide by yield",
+   "default": "Add % on top"
+  },
+  {
+   "fieldname": "rate_basis",
+   "label": "Rate from purchase entry",
+   "fieldtype": "Select",
+   "options": "Latest Purchase\nWeighted Average\nManual",
+   "default": "Latest Purchase"
+  },
+  {
+   "fieldname": "sb_mat",
+   "label": "1. Process with batch purchase",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "batch_processes",
+   "label": "Batch purchase processes",
+   "fieldtype": "Table",
+   "options": "Costing Batch Process"
+  },
+  {
+   "fieldname": "sb_use",
+   "label": "2. Process with known usage per piece",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "usage_processes",
+   "label": "Usage per piece processes",
+   "fieldtype": "Table",
+   "options": "Costing Usage Process"
+  },
+  {
+   "fieldname": "material_rejection_pct",
+   "label": "Material rejection %",
+   "fieldtype": "Float"
+  },
+  {
+   "fieldname": "sb_lab",
+   "label": "3. Labour & light charges",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "labour_charges",
+   "label": "Labour & light charges",
+   "fieldtype": "Table",
+   "options": "Costing Charge"
+  },
+  {
+   "fieldname": "labour_rejection_pct",
+   "label": "Labour & light rejection %",
+   "fieldtype": "Float"
+  },
+  {
+   "fieldname": "sb_mac",
+   "label": "4. Machine, chemical, tooling & grinding",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "machine_charges",
+   "label": "Machine charges",
+   "fieldtype": "Table",
+   "options": "Costing Charge"
+  },
+  {
+   "fieldname": "machine_rejection_pct",
+   "label": "Machine & tooling rejection %",
+   "fieldtype": "Float"
+  },
+  {
+   "fieldname": "sb_res",
+   "label": "Cost build-up per piece",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "materials_total",
+   "label": "Materials & processes total",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "after_material_rejection",
+   "label": "After material rejection",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "labour_total",
+   "label": "+ Labour & light charges",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "after_labour_rejection",
+   "label": "After labour & light rejection",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb2",
+   "label": "",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "machine_total",
+   "label": "+ Machine & tooling charges",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_cost_per_piece",
+   "label": "Total production cost per piece",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "bold": 1,
+   "in_list_view": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "share": 1,
+   "email": 1
+  }
+ ],
+ "autoname": "CB-.#####",
+ "title_field": "product_name",
+ "track_changes": 1
+}

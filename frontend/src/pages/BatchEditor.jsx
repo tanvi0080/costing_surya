@@ -8,17 +8,25 @@ const opt = (arr, v = 'name', l) => arr.map((x) => ({ value: x[v], label: l ? `$
 export default function BatchEditor({ name, onBack }) {
   const [doc, setDoc] = useState(null)
   const [o, setO] = useState({ products: [], processes: [], items: [] })
+  const [uoms, setUoms] = useState([])
   const [msg, setMsg] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [showAddProduct, setShowAddProduct] = useState(false)
+  const [newCode, setNewCode] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newUom, setNewUom] = useState('')
 
   useEffect(() => {
     (async () => {
-      const [products, processes, items] = await Promise.all([
+      const [products, processes, items, uomList] = await Promise.all([
         api.list('Costing Item', ['name', 'item_name']),
         api.list('Process', ['name', 'process_name']),
         api.list('Costing Item', ['name', 'item_name', 'uom_name']),
+        api.list('Costing UOM', ['name', 'uom_name']),
       ])
       setO({ products, processes, items })
+      setUoms(uomList)
+      if (uomList.length > 0) setNewUom(uomList[0].name)
       setDoc(name === 'new' ? calcBatch(emptyBatch()) : calcBatch(await api.getDoc('Costing Batch', name)))
     })().catch((e) => setMsg({ err: e.message }))
   }, [name])
@@ -80,6 +88,25 @@ export default function BatchEditor({ name, onBack }) {
     await api.delDoc('Costing Batch', doc.name); onBack()
   }
 
+  async function createProduct() {
+    if (!newCode || !newName) return setMsg({ err: 'Please enter Product ID and Product Name.' })
+    try {
+      const selectedUom = newUom || (uoms[0]?.name || '')
+      const created = await api.saveDoc('Costing Item', { item_code: newCode, item_name: newName, uom: selectedUom })
+      const [products, items] = await Promise.all([
+        api.list('Costing Item', ['name', 'item_name']),
+        api.list('Costing Item', ['name', 'item_name', 'uom_name']),
+      ])
+      setO((prev) => ({ ...prev, products, items }))
+      set({ product: created.name })
+      setShowAddProduct(false)
+      setNewCode(''); setNewName('')
+      setMsg({ ok: `Created product "${created.item_name}" & selected for this batch.` })
+    } catch (e) {
+      setMsg({ err: e.message })
+    }
+  }
+
   const procOpts = () => () => opt(o.processes, 'name', 'process_name')
   const itemOpts = () => opt(o.items, 'name', 'item_name')
   const chargeCols = [
@@ -104,11 +131,18 @@ export default function BatchEditor({ name, onBack }) {
       {msg?.ok && <div className="alert ok">{msg.ok}</div>}
 
       <section className="card head">
-        <div><label>Product name</label>
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <label>Product name</label>
+            <button type="button" className="btn ghost sm" onClick={() => setShowAddProduct(!showAddProduct)}>
+              {showAddProduct ? 'Cancel' : '+ New Product'}
+            </button>
+          </div>
           <select value={doc.product} onChange={(e) => set({ product: e.target.value })}>
             <option value="">Select product…</option>
             {opt(o.products, 'name', 'item_name').map((x) => <option key={x.value} value={x.value}>{x.label}</option>)}
-          </select></div>
+          </select>
+        </div>
         <div><label>Batch date</label><input type="date" value={doc.batch_date || ''} onChange={(e) => set({ batch_date: e.target.value })} /></div>
         <div><label>Rejection method</label>
           <select value={doc.rejection_method} onChange={(e) => set({ rejection_method: e.target.value })}>
@@ -116,6 +150,31 @@ export default function BatchEditor({ name, onBack }) {
         <div><label>Rate from purchase entry</label>
           <select value={doc.rate_basis} onChange={(e) => changeBasis(e.target.value)}>
             <option>Latest Purchase</option><option>Weighted Average</option><option>Manual</option></select></div>
+
+        {showAddProduct && (
+          <div style={{ gridColumn: '1 / -1', background: 'var(--field)', border: '1px solid var(--accent)', padding: '14px', borderRadius: '8px', marginTop: '6px' }}>
+            <h3 style={{ fontSize: '15px', marginBottom: '8px' }}>Create New Product for Batch</h3>
+            <div className="addrow">
+              <div>
+                <label>Product ID / Code</label>
+                <input placeholder="e.g. PROD-101" value={newCode} onChange={(e) => setNewCode(e.target.value)} />
+              </div>
+              <div>
+                <label>Product Name</label>
+                <input placeholder="e.g. Brass Valve" value={newName} onChange={(e) => setNewName(e.target.value)} />
+              </div>
+              <div>
+                <label>UoM</label>
+                <select value={newUom} onChange={(e) => setNewUom(e.target.value)}>
+                  {uoms.map((u) => <option key={u.name} value={u.name}>{u.uom_name || u.name}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <button type="button" className="btn primary" onClick={createProduct}>Save &amp; Select Product</button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="card">

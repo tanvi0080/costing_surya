@@ -8,7 +8,7 @@ export default defineConfig(({ command }) => ({
   // production files are served by Frappe from /assets/costing/frontend/
   base: command === 'build' ? '/assets/costing/frontend/' : '/',
   build: {
-    outDir: '../costing/costing/public/frontend',
+    outDir: '../costing/public/frontend',
     emptyOutDir: true,
     rollupOptions: { output: { entryFileNames: 'app.js', chunkFileNames: 'chunk-[name].js', assetFileNames: 'app.[ext]' } },
   },

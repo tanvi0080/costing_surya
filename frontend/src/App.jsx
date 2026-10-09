@@ -15,6 +15,13 @@ export default function App() {
   const [user, setUser] = useState(undefined) // undefined = checking session
   const [page, setPage] = useState('dashboard')
   const [batch, setBatch] = useState(null)
+  const [theme, setTheme] = useState(() => localStorage.getItem('costing_theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    document.body.setAttribute('data-theme', theme)
+    localStorage.setItem('costing_theme', theme)
+  }, [theme])
 
   useEffect(() => { api.session().then((s) => setUser(s?.user ? s : null)).catch(() => setUser(null)) }, [])
   if (user === undefined) return <div className="login-wrap"><p className="muted">Loading…</p></div>
@@ -23,11 +30,21 @@ export default function App() {
   const open = (n) => { setBatch(n); setPage('editor') }
   const active = page === 'editor' ? 'batches' : page
   return (
-    <div className="shell">
+    <div className="shell" data-theme={theme}>
       <aside className="side">
         <strong className="brand">Product costing</strong>
         <nav>{NAV.map(([k, l]) => <button key={k} className={active === k ? 'on' : ''} onClick={() => setPage(k)}>{l}</button>)}</nav>
         <div className="side-foot">
+          <div className="theme-picker">
+            <label className="muted">Theme</label>
+            <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+              <option value="light">⚪ White Base</option>
+              <option value="dark">🌑 Dark Slate</option>
+              <option value="emerald">🌲 Emerald Green</option>
+              <option value="indigo">🔮 Royal Indigo</option>
+              <option value="sunset">🌅 Sunset Amber</option>
+            </select>
+          </div>
           <span className="muted">{user.full_name || user.user}</span>
           <button className="btn ghost" onClick={() => api.logout().then(() => setUser(null))}>Sign out</button>
         </div>

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api'
-import { fmt, fmtDate } from '../calc'
+import { fmt, fmtDate, fmtQty } from '../calc'
 
 export default function Dashboard({ onNav, onOpen }) {
   const [d, setD] = useState(null)
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const [batches, purchases, products, processes, uoms] = await Promise.all([
         api.list('Costing Batch', ['name', 'product_name', 'batch_date', 'total_cost_per_piece']),
-        api.list('Purchase Entry', ['name', 'item_name', 'qty', 'uom_name', 'rate', 'amount', 'posting_date']),
+        api.list('Purchase Entry', ['name', 'item_name', 'qty', 'used_qty', 'remaining_qty', 'uom_name', 'rate', 'amount', 'posting_date']),
         api.list('Costing Item', ['name']), api.list('Process', ['name']), api.list('Costing UOM', ['name']),
       ])
       setD({ batches, purchases, products, processes, uoms })
@@ -60,6 +60,7 @@ export default function Dashboard({ onNav, onOpen }) {
                 <th>Product</th>
                 <th>Date</th>
                 <th className="r">Quantity</th>
+                <th className="r">Remaining</th>
                 <th className="r">Total</th>
               </tr>
             </thead>
@@ -68,11 +69,12 @@ export default function Dashboard({ onNav, onOpen }) {
                 <tr key={p.name}>
                   <td>{p.item_name}</td>
                   <td>{fmtDate(p.posting_date)}</td>
-                  <td className="r">{p.qty} {p.uom_name}</td>
+                  <td className="r">{fmtQty(p.qty)} {p.uom_name}</td>
+                  <td className="r">{fmtQty(p.remaining_qty ?? p.qty)} {p.uom_name}</td>
                   <td className="r">{fmt(p.amount)}</td>
                 </tr>
               ))}
-              {!d.purchases.length && <tr><td colSpan="4" className="muted">No purchases yet.</td></tr>}
+              {!d.purchases.length && <tr><td colSpan="5" className="muted">No purchases yet.</td></tr>}
             </tbody>
           </table>
         </section>

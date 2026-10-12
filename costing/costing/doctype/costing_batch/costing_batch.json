@@ -10,9 +10,9 @@
   "product",
   "product_name",
   "batch_date",
+  "output_qty",
   "cb1",
   "rejection_method",
-  "rate_basis",
   "sb_mat",
   "batch_processes",
   "sb_use",
@@ -24,6 +24,9 @@
   "sb_mac",
   "machine_charges",
   "machine_rejection_pct",
+  "sb_extra",
+  "extra_charges",
+  "extra_charges_total",
   "sb_res",
   "materials_total",
   "after_material_rejection",
@@ -31,7 +34,9 @@
   "after_labour_rejection",
   "cb2",
   "machine_total",
-  "total_cost_per_piece"
+  "total_cost_per_piece",
+  "total_batch_amount",
+  "purchase_entry"
  ],
  "fields": [
   {
@@ -57,6 +62,13 @@
    "fieldtype": "Date",
    "default": "Today",
    "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "output_qty",
+   "label": "Output quantity (pieces)",
+   "fieldtype": "Float",
+   "default": "1",
    "in_list_view": 1
   },
   {
@@ -138,6 +150,23 @@
    "fieldtype": "Float"
   },
   {
+   "fieldname": "sb_extra",
+   "label": "5. Extra charges",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "extra_charges",
+   "label": "Extra charges",
+   "fieldtype": "Table",
+   "options": "Costing Extra Charge"
+  },
+  {
+   "fieldname": "extra_charges_total",
+   "label": "Extra charges total",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
    "fieldname": "sb_res",
    "label": "Cost build-up per piece",
    "fieldtype": "Section Break"
@@ -184,6 +213,20 @@
    "read_only": 1,
    "bold": 1,
    "in_list_view": 1
+  },
+  {
+   "fieldname": "total_batch_amount",
+   "label": "Total batch amount",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "purchase_entry",
+   "label": "Generated Purchase Entry",
+   "fieldtype": "Link",
+   "options": "Purchase Entry",
+   "read_only": 1
   }
  ],
  "sort_field": "modified",

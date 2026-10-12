@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api'
-import { fmt, fmtDate } from '../calc'
+import { fmt, fmtDate, fmtQty, n } from '../calc'
 
 export default function Crud({ cfg }) {
   const [rows, setRows] = useState(null)
@@ -32,6 +32,10 @@ export default function Crud({ cfg }) {
     setDialogErr('')
     try {
       const body = Object.fromEntries(cfg.form.map((f) => [f[0], form[f[0]] ?? '']))
+      if (cfg.doctype === 'Costing Item' && body.uom) {
+        const uomObj = (links.uom || []).find((x) => x.name === body.uom)
+        if (uomObj) body.uom_name = uomObj.uom_name || uomObj.name
+      }
       await api.saveDoc(cfg.doctype, isNew ? { ...body, __islocal: 1 } : { ...body, name: form.name })
       setForm(null); load()
     } catch (e) { setDialogErr(e.message) }
@@ -42,7 +46,17 @@ export default function Crud({ cfg }) {
   }
 
   const shown = (rows || []).filter((r) => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))
-  const cell = (r, [k, , t]) => (t === 'num' ? fmt(r[k]) : (t === 'date' || k.includes('date')) ? fmtDate(r[k]) : r[k] ?? '')
+  const cell = (r, [k, , t]) => {
+    if (t === 'qty') {
+      if (k === 'used_qty' && (r.used_qty === undefined || r.used_qty === null)) {
+        return fmtQty(Math.max(0, n(r.qty) - n(r.remaining_qty)))
+      }
+      return fmtQty(r[k])
+    }
+    if (t === 'num') return fmt(r[k])
+    if (t === 'date' || k.includes('date')) return fmtDate(r[k])
+    return r[k] ?? ''
+  }
 
   const input = ([k, label, type, extra]) => {
     const v = form[k] ?? ''
@@ -130,14 +144,26 @@ export default function Crud({ cfg }) {
                     </td>
                   ))}
                   <td className="r nowrap">
-                    <button type="button" className="btn btn-edit sm" onClick={() => { setDialogErr(''); setForm({ ...r }) }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-                      Edit
-                    </button>{' '}
-                    <button type="button" className="btn btn-delete sm" onClick={() => del(r)}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      Delete
-                    </button>
+                    <div className="table-actions">
+                      <button
+                        type="button"
+                        className="btn btn-edit btn-icon sm"
+                        title="Edit"
+                        aria-label="Edit"
+                        onClick={() => { setDialogErr(''); setForm({ ...r }) }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-delete btn-icon sm"
+                        title="Delete"
+                        aria-label="Delete"
+                        onClick={() => del(r)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

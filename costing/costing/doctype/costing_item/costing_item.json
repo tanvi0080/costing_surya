@@ -9,6 +9,7 @@
  "field_order": [
   "item_code",
   "item_name",
+  "category",
   "uom",
   "uom_name"
  ],
@@ -26,6 +27,14 @@
    "label": "Name",
    "fieldtype": "Data",
    "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "category",
+   "label": "Category",
+   "fieldtype": "Link",
+   "options": "Product Category",
+   "default": "Raw Material",
    "in_list_view": 1
   },
   {

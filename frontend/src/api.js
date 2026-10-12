@@ -58,3 +58,52 @@ export const delDoc = (doctype, name) =>
 
 export const rate = async (item, basis) =>
   (await call('/api/method/costing.api.get_purchase_rate', { params: { item, basis } })).message || 0
+
+export const generateFinishedGoodPurchase = async (batchName) =>
+  (await call('/api/method/costing.api.generate_finished_good_purchase', {
+    method: 'POST',
+    body: { batch_name: batchName },
+  })).message
+
+export const syncPurchaseRemainingQty = async (item) =>
+  (await call('/api/method/costing.api.sync_purchase_remaining_qty', {
+    params: item ? { item } : {},
+  })).message
+
+export const getStockSummary = async (item) =>
+  (await call('/api/method/costing.api.get_stock_summary', {
+    params: item ? { item } : {},
+  })).message || {}
+
+export const approveProformaInvoice = async (name) =>
+  (await call('/api/method/costing.api.approve_proforma_invoice', {
+    method: 'POST',
+    body: { name },
+  })).message
+
+export const convertToFinalInvoice = async (name) =>
+  (await call('/api/method/costing.api.convert_to_final_invoice', {
+    method: 'POST',
+    body: { name },
+  })).message
+
+export const updateDispatchTracking = async ({ name, transporter_name, tracking_number, dispatch_date, dispatch_status }) =>
+  (await call('/api/method/costing.api.update_dispatch_tracking', {
+    method: 'POST',
+    body: { name, transporter_name, tracking_number, dispatch_date, dispatch_status },
+  })).message
+
+export const cancelProformaInvoice = async ({ name, cancellation_reason }) =>
+  (await call('/api/method/costing.api.cancel_proforma_invoice', {
+    method: 'POST',
+    body: { name, cancellation_reason },
+  })).message
+
+export const saveProformaInvoice = async (data) =>
+  (await call('/api/method/costing.api.save_proforma_invoice', {
+    method: 'POST',
+    body: { data },
+  })).message
+
+
+

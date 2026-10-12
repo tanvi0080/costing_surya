@@ -1,0 +1,80 @@
+{
+ "doctype": "DocType",
+ "name": "Costing Extra Charge",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "creation": "2026-10-12 10:00:00.000000",
+ "modified": "2026-10-12 10:00:00.000000",
+ "field_order": [
+  "title",
+  "charge",
+  "amount",
+  "qty",
+  "cost_per_piece",
+  "rejection_pct",
+  "total_cost"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "label": "Title",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "charge",
+   "label": "Charge",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount (per period)",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "qty",
+   "label": "Qty (piece)",
+   "fieldtype": "Float",
+   "default": "1",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "cost_per_piece",
+   "label": "Cost per piece",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "precision": "2",
+   "columns": 2
+  },
+  {
+   "fieldname": "rejection_pct",
+   "label": "Rejection %",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "total_cost",
+   "label": "Total / piece",
+   "fieldtype": "Float",
+   "read_only": 1,
+   "in_list_view": 1,
+   "precision": "2",
+   "columns": 2
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "permissions": [],
+ "istable": 1,
+ "editable_grid": 1
+}

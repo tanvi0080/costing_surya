@@ -1,0 +1,100 @@
+{
+ "doctype": "DocType",
+ "name": "Proforma Invoice Item",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "item",
+  "item_name",
+  "qty",
+  "uom",
+  "rate",
+  "discount_pct",
+  "amount",
+  "tax_pct",
+  "tax_amount",
+  "total_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "label": "Product",
+   "fieldtype": "Link",
+   "options": "Costing Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "item_name",
+   "label": "Item Name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "qty",
+   "label": "Qty",
+   "fieldtype": "Float",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "uom",
+   "label": "UoM",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "rate",
+   "label": "Rate",
+   "fieldtype": "Currency",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "discount_pct",
+   "label": "Disc %",
+   "fieldtype": "Float",
+   "default": "0.0",
+   "columns": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "tax_pct",
+   "label": "GST %",
+   "fieldtype": "Float",
+   "default": "18.0",
+   "columns": 1
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "GST Amount",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "label": "Total Amount",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 1
+  }
+ ],
+ "permissions": []
+}

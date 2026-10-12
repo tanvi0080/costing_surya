@@ -1,0 +1,211 @@
+{
+ "doctype": "DocType",
+ "name": "Proforma Invoice",
+ "module": "Costing",
+ "custom": 0,
+ "engine": "InnoDB",
+ "autoname": "format:PI-{#####}",
+ "field_order": [
+  "customer_name",
+  "posting_date",
+  "status",
+  "customer_phone",
+  "customer_email",
+  "gstin",
+  "billing_address",
+  "shipping_address",
+  "items",
+  "subtotal",
+  "discount_pct",
+  "discount_amount",
+  "tax_amount",
+  "grand_total",
+  "is_invoiced",
+  "final_invoice_no",
+  "invoice_date",
+  "transporter_name",
+  "tracking_number",
+  "dispatch_date",
+  "delivery_date",
+  "dispatch_status",
+  "cancellation_reason",
+  "cancelled_date",
+  "credit_note_no",
+  "stock_reserved"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer_name",
+   "label": "Customer Name",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "label": "Date",
+   "fieldtype": "Date",
+   "reqd": 1,
+   "in_list_view": 1,
+   "default": "Today"
+  },
+  {
+   "fieldname": "status",
+   "label": "Status",
+   "fieldtype": "Select",
+   "options": "Pending Customer Approval\nApproved\nInvoiced\nDispatched\nDelivered\nCancelled",
+   "default": "Pending Customer Approval",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "customer_phone",
+   "label": "Phone / Mobile",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "customer_email",
+   "label": "Email",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "gstin",
+   "label": "GSTIN / Tax ID",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "billing_address",
+   "label": "Billing Address",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "shipping_address",
+   "label": "Shipping Address",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "items",
+   "label": "Items",
+   "fieldtype": "Table",
+   "options": "Proforma Invoice Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "subtotal",
+   "label": "Subtotal",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "discount_pct",
+   "label": "Discount %",
+   "fieldtype": "Float",
+   "default": "0.0"
+  },
+  {
+   "fieldname": "discount_amount",
+   "label": "Discount Amount",
+   "fieldtype": "Currency",
+   "default": "0.0"
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "Tax Amount",
+   "fieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "label": "Grand Total",
+   "fieldtype": "Currency",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "is_invoiced",
+   "label": "Is Invoiced",
+   "fieldtype": "Check",
+   "default": "0"
+  },
+  {
+   "fieldname": "final_invoice_no",
+   "label": "Final Invoice No",
+   "fieldtype": "Data",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "invoice_date",
+   "label": "Invoice Date",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "transporter_name",
+   "label": "Courier / Transporter",
+   "fieldtype": "Data",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "tracking_number",
+   "label": "LR / AWB Number",
+   "fieldtype": "Data",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "dispatch_date",
+   "label": "Dispatch Date",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "delivery_date",
+   "label": "Delivery Date",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "dispatch_status",
+   "label": "Dispatch Status",
+   "fieldtype": "Select",
+   "options": "Pending\nDispatched\nDelivered",
+   "default": "Pending"
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "label": "Cancellation Reason",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "cancelled_date",
+   "label": "Cancelled Date",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "credit_note_no",
+   "label": "Credit Note No",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "stock_reserved",
+   "label": "Stock Reserved",
+   "fieldtype": "Check",
+   "default": "1"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "All",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

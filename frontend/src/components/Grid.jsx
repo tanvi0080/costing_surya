@@ -1,6 +1,6 @@
-import { fmt } from '../calc'
+import { fmt, fmtQty } from '../calc'
 
-// cols: { key, label, type: 'text'|'num'|'select'|'calc', w, options, ro, dp }
+// cols: { key, label, type: 'text'|'num'|'select'|'calc', w, options, ro, dp, format }
 export default function Grid({ cols, rows, onChange, onAdd, onDel, addLabel }) {
   const tpl = cols.map((c) => c.w || '1fr').join(' ') + ' 34px'
   const right = (c) => (c.type === 'num' || c.type === 'calc' ? 'r' : '')
@@ -13,7 +13,10 @@ export default function Grid({ cols, rows, onChange, onAdd, onDel, addLabel }) {
         <div className="g-row" key={i} style={{ gridTemplateColumns: tpl }}>
           {cols.map((c) => {
             const ro = typeof c.ro === 'function' ? c.ro() : c.ro
-            if (c.type === 'calc') return <b key={c.key} className="r calc">{fmt(r[c.key], c.dp ?? 2)}</b>
+            if (c.type === 'calc') {
+              const formatted = c.format === 'qty' ? fmtQty(r[c.key], c.dp ?? 4) : fmt(r[c.key], c.dp ?? 2)
+              return <b key={c.key} className="r calc">{formatted}</b>
+            }
             if (c.type === 'select')
               return (
                 <select key={c.key} value={r[c.key] || ''} onChange={(e) => onChange(i, c.key, e.target.value)}>

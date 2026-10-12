@@ -12,6 +12,8 @@
   "item",
   "item_name",
   "qty",
+  "used_qty",
+  "remaining_qty",
   "uom",
   "uom_name",
   "rate",
@@ -53,6 +55,20 @@
    "fieldtype": "Float",
    "reqd": 1,
    "in_list_view": 1
+  },
+  {
+   "fieldname": "used_qty",
+   "label": "Used",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "remaining_qty",
+   "label": "Remaining",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "read_only": 1
   },
   {
    "fieldname": "uom",

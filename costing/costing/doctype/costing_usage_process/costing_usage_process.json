@@ -10,6 +10,10 @@
   "process",
   "item",
   "usage_per_output",
+  "uom",
+  "total_usage",
+  "used_kg",
+  "remaining_stock",
   "unit_price",
   "total_per_output",
   "extra_cost",
@@ -42,6 +46,13 @@
    "precision": "6"
   },
   {
+   "fieldname": "uom",
+   "label": "UoM",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
    "fieldname": "unit_price",
    "label": "Unit price",
    "fieldtype": "Currency",
@@ -52,7 +63,6 @@
    "fieldname": "total_per_output",
    "label": "Total / output",
    "fieldtype": "Float",
-   "read_only": 1,
    "precision": "4"
   },
   {
@@ -64,9 +74,32 @@
    "fieldname": "total_rate",
    "label": "Total rate / output",
    "fieldtype": "Float",
-   "read_only": 1,
    "in_list_view": 1,
    "precision": "2",
+   "columns": 1
+  },
+  {
+   "fieldname": "total_usage",
+   "label": "Total usage",
+   "fieldtype": "Float",
+   "precision": "4",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "used_kg",
+   "label": "Used (kg)",
+   "fieldtype": "Float",
+   "precision": "5",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "remaining_stock",
+   "label": "Remaining stock",
+   "fieldtype": "Float",
+   "precision": "5",
+   "in_list_view": 1,
    "columns": 1
   }
  ],

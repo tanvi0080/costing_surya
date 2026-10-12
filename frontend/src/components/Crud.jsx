@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api'
 import { fmt, fmtDate, fmtQty, n } from '../calc'
+import { useAppStore } from '../store/useAppStore'
 
 export default function Crud({ cfg }) {
   const [rows, setRows] = useState(null)
@@ -9,6 +10,10 @@ export default function Crud({ cfg }) {
   const [err, setErr] = useState('')
   const [dialogErr, setDialogErr] = useState('')
   const [q, setQ] = useState('')
+
+  const registerModal = useAppStore((s) => s.registerModal)
+  const unregisterModal = useAppStore((s) => s.unregisterModal)
+  const showSnackbar = useAppStore((s) => s.showSnackbar)
 
   const fields = [...new Set(['name', ...cfg.cols.map((c) => c[0]), ...cfg.form.map((f) => f[0])])]
   const load = () => api.list(cfg.doctype, fields).then(setRows).catch((e) => setErr(e.message))
@@ -20,12 +25,11 @@ export default function Crud({ cfg }) {
   }, [cfg])
 
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') setForm(null)
+    if (form) {
+      registerModal('crud_dialog', () => setForm(null))
+      return () => unregisterModal('crud_dialog')
     }
-    if (form) window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [form])
+  }, [form, registerModal, unregisterModal])
 
   const isNew = form && form.__islocal
   async function save() {
@@ -37,12 +41,17 @@ export default function Crud({ cfg }) {
         if (uomObj) body.uom_name = uomObj.uom_name || uomObj.name
       }
       await api.saveDoc(cfg.doctype, isNew ? { ...body, __islocal: 1 } : { ...body, name: form.name })
+      showSnackbar(`✓ Saved ${cfg.singular || cfg.title} successfully`, 'success')
       setForm(null); load()
     } catch (e) { setDialogErr(e.message) }
   }
   async function del(r) {
     if (!confirm(`Delete ${r.name}?`)) return
-    try { await api.delDoc(cfg.doctype, r.name); load() } catch (e) { setErr(e.message) }
+    try {
+      await api.delDoc(cfg.doctype, r.name)
+      showSnackbar(`✓ Deleted ${r.name}`, 'info')
+      load()
+    } catch (e) { setErr(e.message) }
   }
 
   const shown = (rows || []).filter((r) => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))

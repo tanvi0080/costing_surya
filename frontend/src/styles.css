@@ -1605,6 +1605,9 @@ input[readonly]{opacity:.68}
   color: var(--accent);
 }
 
-
-
-
+/* Automatic Uppercase Alphabet Conversion for All Form Inputs */
+input:not([type="password"]):not([type="file"]):not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+textarea,
+.MuiInputBase-input:not([type="password"]):not([type="file"]):not([type="number"]) {
+  text-transform: uppercase !important;
+}

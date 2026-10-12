@@ -1,6 +1,23 @@
 // Same maths as costing_batch.py (server re-calculates on save).
 export const n = (v) => parseFloat(v) || 0
 export const fmt = (v, dp = 2) => n(v).toLocaleString('en-IN', { minimumFractionDigits: dp, maximumFractionDigits: dp })
+export const fmtDate = (d) => {
+  if (!d) return ''
+  if (typeof d === 'string' && /^\d{4}-\d{2}-\d{2}/.test(d)) {
+    const [y, m, day] = d.slice(0, 10).split('-')
+    return `${day}-${m}-${y}`
+  }
+  try {
+    const dt = new Date(d)
+    if (isNaN(dt.getTime())) return d
+    const day = String(dt.getDate()).padStart(2, '0')
+    const month = String(dt.getMonth() + 1).padStart(2, '0')
+    const year = dt.getFullYear()
+    return `${day}-${month}-${year}`
+  } catch (e) {
+    return d
+  }
+}
 
 export const reject = (x, pct, method) =>
   method === 'Divide by yield' ? (n(pct) < 100 ? x / (1 - n(pct) / 100) : x) : x * (1 + n(pct) / 100)

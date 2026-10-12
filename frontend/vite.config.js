@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const FRAPPE = process.env.FRAPPE_URL || 'http://localhost:8000'
+const FRAPPE = process.env.FRAPPE_URL || 'http://localhost:8001'
 
 export default defineConfig(({ command }) => ({
   plugins: [react()],

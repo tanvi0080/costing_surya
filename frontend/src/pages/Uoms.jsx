@@ -2,7 +2,7 @@ import Crud from '../components/Crud'
 
 // UoM: ID, Name  (doctype: Costing UOM)
 const cfg = {
-  title: 'UoM', singular: 'UoM', doctype: 'Costing UOM',
+  title: 'UOM', singular: 'UoM', doctype: 'Costing UOM',
   cols: [['name', 'ID'], ['uom_name', 'Name']],
   form: [['uom_name', 'Name', 'text']],
 }

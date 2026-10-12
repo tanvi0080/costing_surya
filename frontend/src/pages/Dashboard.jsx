@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api'
-import { fmt } from '../calc'
+import { fmt, fmtDate } from '../calc'
 
 export default function Dashboard({ onNav, onOpen }) {
   const [d, setD] = useState(null)
@@ -8,7 +8,7 @@ export default function Dashboard({ onNav, onOpen }) {
     (async () => {
       const [batches, purchases, products, processes, uoms] = await Promise.all([
         api.list('Costing Batch', ['name', 'product_name', 'batch_date', 'total_cost_per_piece']),
-        api.list('Purchase Entry', ['name', 'item_name', 'qty', 'uom_name', 'rate', 'amount']),
+        api.list('Purchase Entry', ['name', 'item_name', 'qty', 'uom_name', 'rate', 'amount', 'posting_date']),
         api.list('Costing Item', ['name']), api.list('Process', ['name']), api.list('Costing UOM', ['name']),
       ])
       setD({ batches, purchases, products, processes, uoms })
@@ -30,21 +30,51 @@ export default function Dashboard({ onNav, onOpen }) {
       <div className="two">
         <section className="card">
           <h3>Recent batches</h3>
-          <table className="tbl"><tbody>
-            {d.batches.slice(0, 6).map((b) => (
-              <tr key={b.name} onClick={() => onOpen(b.name)}><td>{b.name}</td><td>{b.product_name}</td><td className="r"><b>{fmt(b.total_cost_per_piece)}</b></td></tr>
-            ))}
-            {!d.batches.length && <tr><td className="muted">No batches yet.</td></tr>}
-          </tbody></table>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Date</th>
+                <th className="r">Cost / piece</th>
+              </tr>
+            </thead>
+            <tbody>
+              {d.batches.slice(0, 6).map((b) => (
+                <tr key={b.name} onClick={() => onOpen(b.name)}>
+                  <td className="cell-id">{b.name}</td>
+                  <td>{b.product_name}</td>
+                  <td>{fmtDate(b.batch_date)}</td>
+                  <td className="r"><b>{fmt(b.total_cost_per_piece)}</b></td>
+                </tr>
+              ))}
+              {!d.batches.length && <tr><td colSpan="4" className="muted">No batches yet.</td></tr>}
+            </tbody>
+          </table>
         </section>
         <section className="card">
           <h3>Latest purchases</h3>
-          <table className="tbl static"><tbody>
-            {d.purchases.slice(0, 6).map((p) => (
-              <tr key={p.name}><td>{p.item_name}</td><td className="r">{p.qty} {p.uom_name}</td><td className="r">{fmt(p.amount)}</td></tr>
-            ))}
-            {!d.purchases.length && <tr><td className="muted">No purchases yet.</td></tr>}
-          </tbody></table>
+          <table className="tbl static">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Date</th>
+                <th className="r">Quantity</th>
+                <th className="r">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {d.purchases.slice(0, 6).map((p) => (
+                <tr key={p.name}>
+                  <td>{p.item_name}</td>
+                  <td>{fmtDate(p.posting_date)}</td>
+                  <td className="r">{p.qty} {p.uom_name}</td>
+                  <td className="r">{fmt(p.amount)}</td>
+                </tr>
+              ))}
+              {!d.purchases.length && <tr><td colSpan="4" className="muted">No purchases yet.</td></tr>}
+            </tbody>
+          </table>
         </section>
       </div>
     </>

@@ -18,8 +18,8 @@ export default function Login({ onLogin }) {
   return (
     <div className="login-wrap">
       <form className="card login" onSubmit={submit}>
-        <h1>Product costing</h1>
-        <p className="muted">Sign in with your Frappe account.</p>
+        <h1>SuryaCLS</h1>
+        <p className="muted">Sign in with your account.</p>
         <label>Username</label>
         <input value={usr} onChange={(e) => setUsr(e.target.value)} autoComplete="username" />
         <label>Password</label>

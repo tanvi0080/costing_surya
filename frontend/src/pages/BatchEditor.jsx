@@ -3,7 +3,7 @@ import * as api from '../api'
 import { calcBatch, emptyBatch, fmt } from '../calc'
 import Grid from '../components/Grid'
 
-const opt = (arr, v = 'name', l) => arr.map((x) => ({ value: x[v], label: l ? `${x[v]} — ${x[l]}` : x[v] }))
+const opt = (arr, v = 'name', l) => arr.map((x) => ({ value: x[v], label: l ? (x[l] || x[v]) : x[v] }))
 
 export default function BatchEditor({ name, onBack }) {
   const [doc, setDoc] = useState(null)
@@ -124,7 +124,7 @@ export default function BatchEditor({ name, onBack }) {
         <h2>{doc.name || 'New batch'}</h2>
         <span className="spacer" />
         {doc.name && <button className="btn ghost" onClick={duplicate}>Duplicate</button>}
-        {doc.name && <button className="btn ghost danger" onClick={remove}>Delete</button>}
+        {doc.name && <button className="btn btn-delete sm" onClick={remove}>Delete</button>}
         <button className="btn primary" onClick={save} disabled={busy}>{busy ? 'Saving…' : 'Save batch'}</button>
       </div>
       {msg?.err && <div className="alert">{msg.err}</div>}
@@ -134,8 +134,8 @@ export default function BatchEditor({ name, onBack }) {
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <label>Product name</label>
-            <button type="button" className="btn ghost sm" onClick={() => setShowAddProduct(!showAddProduct)}>
-              {showAddProduct ? 'Cancel' : '+ New Product'}
+            <button type="button" className="btn ghost sm" onClick={() => setShowAddProduct(true)}>
+              + New Product
             </button>
           </div>
           <select value={doc.product} onChange={(e) => set({ product: e.target.value })}>
@@ -150,32 +150,44 @@ export default function BatchEditor({ name, onBack }) {
         <div><label>Rate from purchase entry</label>
           <select value={doc.rate_basis} onChange={(e) => changeBasis(e.target.value)}>
             <option>Latest Purchase</option><option>Weighted Average</option><option>Manual</option></select></div>
+      </section>
 
-        {showAddProduct && (
-          <div style={{ gridColumn: '1 / -1', background: 'var(--field)', border: '1px solid var(--accent)', padding: '14px', borderRadius: '8px', marginTop: '6px' }}>
-            <h3 style={{ fontSize: '15px', marginBottom: '8px' }}>Create New Product for Batch</h3>
-            <div className="addrow">
-              <div>
-                <label>Product ID / Code</label>
-                <input placeholder="e.g. PROD-101" value={newCode} onChange={(e) => setNewCode(e.target.value)} />
+      {/* Modal Dialog for New Product within Batch Editor */}
+      {showAddProduct && (
+        <div className="modal-overlay" onClick={() => setShowAddProduct(false)} role="dialog" aria-modal="true">
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title-wrap">
+                <span className="modal-badge">Create</span>
+                <h3>New Product</h3>
               </div>
-              <div>
-                <label>Product Name</label>
-                <input placeholder="e.g. Brass Valve" value={newName} onChange={(e) => setNewName(e.target.value)} />
-              </div>
-              <div>
-                <label>UoM</label>
-                <select value={newUom} onChange={(e) => setNewUom(e.target.value)}>
-                  {uoms.map((u) => <option key={u.name} value={u.name}>{u.uom_name || u.name}</option>)}
-                </select>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-                <button type="button" className="btn primary" onClick={createProduct}>Save &amp; Select Product</button>
+              <button type="button" className="modal-close" onClick={() => setShowAddProduct(false)} title="Close (Esc)">✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="formgrid">
+                <div>
+                  <label>Product ID / Code</label>
+                  <input placeholder="e.g. PROD-101" value={newCode} onChange={(e) => setNewCode(e.target.value)} autoFocus />
+                </div>
+                <div>
+                  <label>Product Name</label>
+                  <input placeholder="e.g. Brass Valve" value={newName} onChange={(e) => setNewName(e.target.value)} />
+                </div>
+                <div>
+                  <label>UoM</label>
+                  <select value={newUom} onChange={(e) => setNewUom(e.target.value)}>
+                    {uoms.map((u) => <option key={u.name} value={u.name}>{u.uom_name || u.name}</option>)}
+                  </select>
+                </div>
               </div>
             </div>
+            <div className="modal-footer">
+              <button type="button" className="btn ghost" onClick={() => setShowAddProduct(false)}>Cancel</button>
+              <button type="button" className="btn primary" onClick={createProduct}>Save &amp; Select Product</button>
+            </div>
           </div>
-        )}
-      </section>
+        </div>
+      )}
 
       <section className="card">
         <h3>1. Process with batch purchase</h3>
@@ -234,16 +246,96 @@ export default function BatchEditor({ name, onBack }) {
           <input type="number" value={doc.machine_rejection_pct ?? ''} onChange={(e) => set({ machine_rejection_pct: e.target.value })} /></div>
       </section>
 
-      <section className="card build">
-        <h3>Cost build-up per piece</h3>
-        {[
-          ['Materials & processes total', doc.materials_total],
-          [`After material rejection`, doc.after_material_rejection],
-          ['+ Labour & light charges', doc.labour_total],
-          ['After labour & light rejection', doc.after_labour_rejection],
-          ['+ Machine & tooling charges', doc.machine_total],
-        ].map(([l, v]) => <div className="b-row" key={l}><span>{l}</span><span>{fmt(v)}</span></div>)}
-        <div className="b-row total"><span>Total production cost per piece</span><span>{fmt(doc.total_cost_per_piece)}</span></div>
+      <section className="card cost-breakdown-card">
+        <div className="breakdown-header">
+          <div>
+            <h3>Cost Build-Up Per Piece</h3>
+            <p className="muted" style={{ margin: '4px 0 0' }}>Comprehensive summary across material, labour, and tooling stages</p>
+          </div>
+          <div className="breakdown-badges">
+            <span className="breakdown-badge">{doc.rejection_method || 'Add % on top'}</span>
+            <span className="breakdown-badge">{doc.rate_basis || 'Latest Purchase'}</span>
+          </div>
+        </div>
+
+        {/* 3 Color-Coded Category Cards */}
+        <div className="cost-stages-grid">
+          {/* Card 1: Materials & Processing (Cyan/Blue) */}
+          <div className="cost-stage-box stage-materials">
+            <div className="cost-stage-top">
+              <span className="cost-stage-tag">STAGE 1</span>
+              <span className="cost-stage-rej">Rejection: {doc.material_rejection_pct || 0}%</span>
+            </div>
+            <h4 className="cost-stage-name">Materials &amp; Process</h4>
+            <div className="cost-stage-metrics">
+              <div className="cost-stage-line">
+                <span className="lbl">Base Total</span>
+                <span className="val">{fmt(doc.materials_total)}</span>
+              </div>
+              <div className="cost-stage-line highlight">
+                <span className="lbl">After Rejection</span>
+                <span className="val bold">{fmt(doc.after_material_rejection)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Labour & Light (Emerald/Green) */}
+          <div className="cost-stage-box stage-labour">
+            <div className="cost-stage-top">
+              <span className="cost-stage-tag">STAGE 2</span>
+              <span className="cost-stage-rej">Rejection: {doc.labour_rejection_pct || 0}%</span>
+            </div>
+            <h4 className="cost-stage-name">Labour &amp; Light</h4>
+            <div className="cost-stage-metrics">
+              <div className="cost-stage-line">
+                <span className="lbl">Charges Total</span>
+                <span className="val">{fmt(doc.labour_total)}</span>
+              </div>
+              <div className="cost-stage-line highlight">
+                <span className="lbl">After Rejection</span>
+                <span className="val bold">{fmt(doc.after_labour_rejection)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Machine & Tooling (Purple/Indigo) */}
+          <div className="cost-stage-box stage-machine">
+            <div className="cost-stage-top">
+              <span className="cost-stage-tag">STAGE 3</span>
+              <span className="cost-stage-rej">Rejection: {doc.machine_rejection_pct || 0}%</span>
+            </div>
+            <h4 className="cost-stage-name">Machine &amp; Tooling</h4>
+            <div className="cost-stage-metrics">
+              <div className="cost-stage-line">
+                <span className="lbl">Charges Total</span>
+                <span className="val">{fmt(doc.machine_total)}</span>
+              </div>
+              <div className="cost-stage-line highlight">
+                <span className="lbl">Total Contribution</span>
+                <span className="val bold">{fmt(doc.machine_total)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Grand Total Amount Banner */}
+        <div className="grand-total-banner">
+          <div className="grand-total-left">
+            <div className="grand-total-pill">
+              <span className="pulse-dot" />
+              <span>GRAND TOTAL</span>
+            </div>
+            <div className="grand-total-title">Total Production Cost</div>
+            <div className="grand-total-subtitle">Final cost calculated per individual finished piece</div>
+          </div>
+          <div className="grand-total-right">
+            <div className="grand-total-price">
+              <span className="currency-symbol">₹</span>
+              <span className="price-number">{fmt(doc.total_cost_per_piece)}</span>
+              <span className="per-piece-text">/ piece</span>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   )

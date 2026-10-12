@@ -4,7 +4,7 @@ import { fmt, n } from '../calc'
 // Purchase: ID, Product name, Unit, UoM, Rate, Total  (doctype: Purchase Entry)
 const cfg = {
   title: 'Purchases', singular: 'purchase', doctype: 'Purchase Entry',
-  cols: [['name', 'ID'], ['item_name', 'Product name'], ['qty', 'Unit', 'int'], ['uom_name', 'UoM'], ['rate', 'Rate', 'num'], ['amount', 'Total', 'num']],
+  cols: [['name', 'ID'], ['posting_date', 'Date', 'date'], ['item_name', 'Product name'], ['qty', 'Unit', 'int'], ['uom_name', 'UoM'], ['rate', 'Rate', 'num'], ['amount', 'Total', 'num']],
   form: [
     ['posting_date', 'Date', 'date'],
     ['supplier', 'Supplier', 'text'],
